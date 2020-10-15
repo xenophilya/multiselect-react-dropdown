@@ -442,32 +442,7 @@ export class Multiselect extends React.Component {
           ref={this.searchWrapper} style={style['searchBox']} 
           onClick={singleSelect ? this.toggelOptionList : () => {}}
         >
-          {this.renderSelectedList()}
-          <input
-						type="text"
-						ref={this.searchBox}
-            className="searchBox"
-            id={`${id || 'search'}_input`}
-            onChange={this.onChange}
-            value={inputValue}
-            onFocus={this.toggelOptionList}
-            onBlur={() => setTimeout(this.toggelOptionList, 200)}
-            placeholder={((singleSelect && seleccdtedValues.length) || (hidePlaceholder && selectedValues.length)) ? '' : placeholder}
-            onKeyDown={this.onArrowKeyNavigation}
-            style={style['inputField']}
-            autoComplete="off"
-            disabled={singleSelect || disable}
-          />
-          {singleSelect && <i
-            className={`icon_cancel ${ms.icon_down_dir}`}
-          />}
-        </div>
-        <div
-          className={`optionListContainer ${ms.optionListContainer} ${
-            toggleOptionsList ? ms.displayBlock : ms.displayNone
-          }`}
-        >
-          {this.renderOptionList()}
+          
           <p>powered by xenophilya</p>
         </div>
         
