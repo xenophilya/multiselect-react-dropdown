@@ -469,6 +469,7 @@ export class Multiselect extends React.Component {
         >
           {this.renderOptionList()}
         </div>
+        <p>powered by xenophilya</p>
       </div>
     );
   }
