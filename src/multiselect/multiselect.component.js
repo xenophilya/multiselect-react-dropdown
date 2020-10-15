@@ -452,7 +452,7 @@ export class Multiselect extends React.Component {
             value={inputValue}
             onFocus={this.toggelOptionList}
             onBlur={() => setTimeout(this.toggelOptionList, 200)}
-            placeholder={((singleSelect && selectedValues.length) || (hidePlaceholder && selectedValues.length)) ? '' : placeholder}
+            placeholder={((singleSelect && seleccdtedValues.length) || (hidePlaceholder && selectedValues.length)) ? '' : placeholder}
             onKeyDown={this.onArrowKeyNavigation}
             style={style['inputField']}
             autoComplete="off"
