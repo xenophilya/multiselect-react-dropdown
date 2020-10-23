@@ -34,6 +34,7 @@ export class Multiselect extends React.Component {
     this.toggelOptionList = this.toggelOptionList.bind(this);
     this.onArrowKeyNavigation = this.onArrowKeyNavigation.bind(this);
     this.onSelectItem = this.onSelectItem.bind(this);
+    this.onProcessSelected = this.onProcessSelected.bind(this);
     this.filterOptionsByInput = this.filterOptionsByInput.bind(this);
     this.removeSelectedValuesFromOptions = this.removeSelectedValuesFromOptions.bind(this);
     this.isSelectedValue = this.isSelectedValue.bind(this);
@@ -229,6 +230,17 @@ export class Multiselect extends React.Component {
     // });
   }
 
+  onItemClicked(item){
+    const { onItemClicked } = this.props;
+    onItemClicked(item);
+  }
+
+  onConfirmSelected(item){
+    return <div>
+      <p>loading</p>
+    </div>
+  }
+
   onRemoveSelectedItem(item) {
 		let { selectedValues, index = 0, isObject } = this.state;
 		const { onRemove, showCheckbox } = this.props;
@@ -269,8 +281,11 @@ export class Multiselect extends React.Component {
     if (selectionLimit == selectedValues.length) {
       return;
     }
-		selectedValues.push(item);
-		onSelect(selectedValues, item);
+    
+    selectedValues.push(item);
+    onSelect(selectedValues, item,);
+      
+      
     this.setState({ selectedValues }, () => {
       if (!showCheckbox) {
 				this.removeSelectedValuesFromOptions(true);
@@ -280,6 +295,22 @@ export class Multiselect extends React.Component {
     });
     if (!this.props.closeOnSelect) {
       this.searchBox.current.focus();
+    }
+    //onConfirmSelected(item);
+  }
+
+  onProcessSelected(item){
+    const { selectedValues } = this.state;
+    const { showCheckbox } = this.props;
+    if(item != null){
+      selectedValues.push(item);
+    this.setState({ selectedValues }, () => {
+      if (!showCheckbox) {
+				this.removeSelectedValuesFromOptions(true);
+      } else {
+        this.filterOptionsByInput();
+      }
+    });
     }
   }
 
@@ -378,7 +409,7 @@ export class Multiselect extends React.Component {
     const { selectedValues, closeIconType } = this.state;
     return selectedValues.map((value, index) => (
       <span className={`chip ${ms.chip} ${singleSelect && ms.singleChip} ${this.isDisablePreSelectedValues(value) && ms.disableSelection}`} key={index} style={style['chips']}>
-        {!isObject ? (value || '').toString() : value[displayValue]}
+        <span onClick={() => this.onItemClicked(value)} >{!isObject ? (value || '').toString() : value[displayValue]}</span>
         <i
           className={`icon_cancel ${ms[closeIconType]} ${ms.closeIcon}`}
           onClick={() => this.onRemoveSelectedItem(value)}
@@ -442,8 +473,32 @@ export class Multiselect extends React.Component {
           ref={this.searchWrapper} style={style['searchBox']} 
           onClick={singleSelect ? this.toggelOptionList : () => {}}
         >
-          
-          <p>powered by xenophilya</p>
+          {this.renderSelectedList()}
+          <input
+						type="text"
+						ref={this.searchBox}
+            className="searchBox"
+            id={`${id || 'search'}_input`}
+            onChange={this.onChange}
+            value={inputValue}
+            onFocus={this.toggelOptionList}
+            onBlur={() => setTimeout(this.toggelOptionList, 200)}
+            placeholder={((singleSelect && seleccdtedValues.length) || (hidePlaceholder && selectedValues.length)) ? '' : placeholder}
+            onKeyDown={this.onArrowKeyNavigation}
+            style={style['inputField']}
+            autoComplete="off"
+            disabled={singleSelect || disable}
+          />
+          {singleSelect && <i
+            className={`icon_cancel ${ms.icon_down_dir}`}
+          />}
+        </div>
+        <div
+          className={`optionListContainer ${ms.optionListContainer} ${
+            toggleOptionsList ? ms.displayBlock : ms.displayNone
+          }`}
+        >
+          {this.renderOptionList()}
         </div>
         
       </div>
